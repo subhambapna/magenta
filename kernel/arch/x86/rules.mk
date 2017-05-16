@@ -83,6 +83,7 @@ MODULE_SRCS += \
 	$(LOCAL_DIR)/hypervisor/vmx_cpu_state.cpp \
 
 MODULE_DEPS += \
+	kernel/dev/iommu/dummy \
 	kernel/lib/bitmap \
 	kernel/lib/hypervisor \
 
