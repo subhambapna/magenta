@@ -89,8 +89,9 @@ public:
     // used by the killer thread to avoid jobs whose capped importance is
     // IMMORTAL.
 
-    uint32_t process_count() const TA_REQ(lock_) { return process_count_; }
-    uint32_t job_count() const TA_REQ(lock_) { return job_count_; }
+    // Returns true if the job currently has any job or process children.
+    bool HasChildren() const;
+
     bool AddChildProcess(ProcessDispatcher* process);
     void RemoveChildProcess(ProcessDispatcher* process);
     void Kill();

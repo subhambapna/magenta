@@ -121,6 +121,12 @@ mx_koid_t JobDispatcher::get_related_koid() const {
     return parent_ ? parent_->get_koid() : 0u;
 }
 
+bool JobDispatcher::HasChildren() const {
+    canary_.Assert();
+    AutoLock lock(&lock_);
+    return job_count_ > 0 || process_count_ > 0;
+}
+
 bool JobDispatcher::AddChildProcess(ProcessDispatcher* process) {
     canary_.Assert();
 
