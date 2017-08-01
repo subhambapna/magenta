@@ -10,6 +10,7 @@ MODULE_TYPE := driver
 
 MODULE_SRCS += \
     $(LOCAL_DIR)/dwc3.c \
+    $(LOCAL_DIR)/dwc3-commands.c \
     $(LOCAL_DIR)/dwc3-events.c
 
 MODULE_STATIC_LIBS := system/ulib/ddk system/ulib/sync system/ulib/pretty

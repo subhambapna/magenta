@@ -26,7 +26,7 @@ enum {
     IRQ_USB3,
 };
 
-static void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected) {
+void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected) {
     uint32_t value = readl(ptr);
     while ((value & bits) != expected) {
         usleep(1000);

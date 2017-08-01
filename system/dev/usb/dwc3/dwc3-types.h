@@ -40,3 +40,4 @@ typedef volatile struct {
 #define TRB_STREAM_ID_BITS  16
 #define TRB_SOF_NUM_START   14          // SOF Number
 #define TRB_SOF_NUM_BITS    16
+
