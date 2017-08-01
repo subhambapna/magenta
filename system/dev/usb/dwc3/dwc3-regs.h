@@ -164,8 +164,14 @@
 #define GEVNTADR(n)         (0xc400 + 0x10 * (n))   // Global Event Buffer Address Register
 #define GEVNTADRLO(n)       (0xc400 + 0x10 * (n))   // Global Event Buffer Address Register - Low
 #define GEVNTADRHI(n)       (0xc404 + 0x10 * (n))   // Global Event Buffer Address Register - High
+
 #define GEVNTSIZ(n)         (0xc408 + 0x10 * (n))   // Global Event Buffer Size Register
+#define GEVNTSIZ_EVNTINTRPTMASK         (1 << 31)   // Event Interrupt Mask
+
 #define GEVNTCOUNT(n)       (0xc408 + 0x10 * (n))   // Global Event Buffer Size Register
+#define GEVNTCOUNT_EVNT_HANDLER_BUSY    (1 << 31)   // Event Handler Busy
+#define GEVNTCOUNT_EVNTCOUNT_MASK       0xffff      // Mask for Event Count
+
 #define GHWPARAMS8          0xc600              // Global Hardware Parameters Register 8
 #define GSMACCTL            0xc604              // Global SMAC CONTROL REGISTER
 #define GUCTL2              0xc608              // Global User Control Register 2
@@ -262,8 +268,30 @@
 #define DEPCMDPAR2(n)       (0xc800 + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 2 Register
 #define DEPCMDPAR1(n)       (0xc804 + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 1 Register
 #define DEPCMDPAR0(n)       (0xc808 + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 0 Register
+
 #define DEPCMD(n)           (0xc80c + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 0 Register
-#define DEV_IMOD(n)         (0xca00 + 4 * (n))  // Device Interrupt Moderation Register
+#define DEPCMD_COMMANDPARAM_START       16          // Command Parameters
+#define DEPCMD_COMMANDPARAM_BITS        16
+#define DEPCMD_CMDSTATUS_START          12          // Command Completion Status
+#define DEPCMD_CMDSTATUS_BITS           4
+#define DEPCMD_HIPRI_FORCERM            (1 << 11)   // HighPriority/ForceRM
+#define DEPCMD_CMDACT                   (1 << 10)   // Command Active
+#define DEPCMD_CMDIOC                   (1 << 8)    // Command Interrupt on Complete
+#define DEPCMD_CMDTYP_START             0           // Command Type
+#define DEPCMD_CMDTYP_BITS              4
+
+// Command Types for DEPCMD
+#define DEPCMD_SET_EP_CONFIG            1           // Set Endpoint Configuration
+#define DEPCMD_SET_EP_TXFR_RSRC_CONFIG  2           // Set Endpoint Transfer Resource Configuration
+#define DEPCMD_GET_EP_STATE             3           // Get EndpointState 
+#define DEPCMD_SET_STALL                4           // Set Stall
+#define DEPCMD_CLEAR_STALL              5           // Clear Stall
+#define DEPCMD_START_TXFR               6           // Start Transfer
+#define DEPCMD_UPDATE_TXFR              7           // Update Transfer
+#define DEPCMD_END_TXFR                 8           // End Transfer
+#define DEPCMD_START_NEW_CONFIG         9           // Start New Configuration
+
+#define DEV_IMOD(n)         (0xca00 + 4 * (n))      // Device Interrupt Moderation Register
 
 // BC register offsets
 #define BCFG                0xcc30              // BC Configuration Register

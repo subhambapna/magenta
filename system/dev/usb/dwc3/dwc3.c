@@ -4,7 +4,6 @@
 
 #include <ddk/binding.h>
 #include <ddk/protocol/platform-devices.h>
-#include <ddk/protocol/usb-dci.h>
 #include <hw/reg.h>
 #include <pretty/hexdump.h>
 
@@ -27,25 +26,6 @@ enum {
     IRQ_USB3,
 };
 
-static int dwc_irq_thread(void* arg) {
-    usb_dwc3_t* dwc = arg;
-
-    while (1) {
-        mx_status_t status = mx_interrupt_wait(dwc->irq_handle);
-        if (status != MX_OK) {
-            printf("mx_interrupt_wait returned %d\n", status);
-            mx_interrupt_complete(dwc->irq_handle);
-            break;
-        }
-
-        mx_interrupt_complete(dwc->irq_handle);
-        printf("dwc_irq_thread got interrupt\n");
-    }
-
-    printf("dwc_irq_thread done\n");
-    return 0;
-}
-
 static void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected) {
     uint32_t value = readl(ptr);
     while ((value & bits) != expected) {
@@ -57,21 +37,21 @@ static void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expec
 static mx_status_t dwc3_start(usb_dwc3_t* dwc) {
 printf("dwc3_start\n");
     // set device mode
-    volatile void* usb3otg = dwc->usb3otg.vaddr;
-    uint32_t temp = readl(usb3otg + GCTL);
+    volatile void* mmio = dwc->mmio.vaddr;
+    uint32_t temp = readl(mmio + GCTL);
     temp &= ~GCTL_PRTCAPDIR_MASK;
     temp |= GCTL_PRTCAPDIR_HOST;
-    writel(temp, usb3otg + GCTL);
+    writel(temp, mmio + GCTL);
 
-    temp = readl(usb3otg + DCTL);
+    temp = readl(mmio + DCTL);
     temp |= DCTL_CSFTRST;
-    writel(temp, usb3otg + DCTL);
-    dwc3_wait_bits(usb3otg + DCTL, DCTL_CSFTRST, 0);
+    writel(temp, mmio + DCTL);
+    dwc3_wait_bits(mmio + DCTL, DCTL_CSFTRST, 0);
 
     printf("global registers:\n");
-    hexdump(dwc->usb3otg.vaddr + GSBUSCFG0, 256);
+    hexdump(dwc->mmio.vaddr + GSBUSCFG0, 256);
     printf("device registers:\n");
-    hexdump(dwc->usb3otg.vaddr + DCFG, 256);
+    hexdump(dwc->mmio.vaddr + DCFG, 256);
 
     return MX_OK;
 }
@@ -113,7 +93,7 @@ static void dwc3_unbind(void* ctx) {
 
 static void dwc3_release(void* ctx) {
     usb_dwc3_t* dwc = ctx;
-    pdev_mmio_buffer_release(&dwc->usb3otg);
+    pdev_mmio_buffer_release(&dwc->mmio);
     mx_handle_close(dwc->irq_handle);
     free(dwc);
 }
@@ -138,12 +118,17 @@ static mx_status_t dwc3_bind(void* ctx, mx_device_t* dev, void** cookie) {
     }
 
     status = pdev_map_mmio_buffer(&pdev, MMIO_USB3OTG, MX_CACHE_POLICY_UNCACHED_DEVICE,
-                                  &dwc->usb3otg);
+                                  &dwc->mmio);
     if (status != MX_OK) {
         goto fail;
     }
 
     status = pdev_map_interrupt(&pdev, IRQ_USB3, &dwc->irq_handle);
+    if (status != MX_OK) {
+        goto fail;
+    }
+
+    status = dwc3_events_init(dwc);
     if (status != MX_OK) {
         goto fail;
     }
@@ -162,7 +147,11 @@ static mx_status_t dwc3_bind(void* ctx, mx_device_t* dev, void** cookie) {
         goto fail;
     }
 
-    thrd_create_with_name(&dwc->irq_thread, dwc_irq_thread, dwc, "dwc_irq_thread");
+    dwc3_events_start(dwc);
+
+    // start the controller
+    volatile void* mmio = dwc->mmio.vaddr;
+    DWC3_WRITE32(mmio + DCTL, DCTL_RUN_STOP);
 
     return MX_OK;
 
