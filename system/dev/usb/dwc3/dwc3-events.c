@@ -10,7 +10,7 @@
 #define EVENT_BUFFER_SIZE   PAGE_SIZE
 
 static int dwc_irq_thread(void* arg) {
-    usb_dwc3_t* dwc = arg;
+    dwc3_t* dwc = arg;
     volatile void* mmio = dwc->mmio.vaddr;
 
 /*
@@ -40,7 +40,7 @@ static int dwc_irq_thread(void* arg) {
     return 0;
 }
 
-mx_status_t dwc3_events_init(usb_dwc3_t* dwc) {
+mx_status_t dwc3_events_init(dwc3_t* dwc) {
     // allocate event buffer
     mx_status_t status = io_buffer_init(&dwc->event_buffer, EVENT_BUFFER_SIZE, IO_BUFFER_RW);
     if (status != MX_OK) {
@@ -57,7 +57,7 @@ mx_status_t dwc3_events_init(usb_dwc3_t* dwc) {
     return MX_OK;
 }
 
-void dwc3_events_start(usb_dwc3_t* dwc) {
+void dwc3_events_start(dwc3_t* dwc) {
 
     // enable events
     volatile void* mmio = dwc->mmio.vaddr;

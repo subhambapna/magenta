@@ -34,7 +34,7 @@ void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected) {
     }
 }
 
-static mx_status_t dwc3_start(usb_dwc3_t* dwc) {
+static mx_status_t dwc3_start(dwc3_t* dwc) {
 printf("dwc3_start\n");
     // set device mode
     volatile void* mmio = dwc->mmio.vaddr;
@@ -57,7 +57,7 @@ printf("dwc3_start\n");
 }
 
 static mx_status_t dwc_set_interface(void* ctx, usb_dci_interface_t* dci_intf) {
-    usb_dwc3_t* dwc = ctx;
+    dwc3_t* dwc = ctx;
     memcpy(&dwc->dci_intf, dci_intf, sizeof(dwc->dci_intf));
     return MX_OK;
 }
@@ -67,7 +67,7 @@ static mx_status_t dwc_config_ep(void* ctx, const usb_endpoint_descriptor_t* ep_
 }
 
 static mx_status_t dwc_set_enabled(void* ctx, bool enabled) {
-    usb_dwc3_t* dwc = ctx;
+    dwc3_t* dwc = ctx;
 
     if (enabled) {
         return dwc3_start(dwc);
@@ -84,7 +84,7 @@ usb_dci_protocol_ops_t dwc_dci_protocol = {
 };
 
 static void dwc3_unbind(void* ctx) {
-    usb_dwc3_t* dwc = ctx;
+    dwc3_t* dwc = ctx;
 
     mx_interrupt_signal(dwc->irq_handle);
     thrd_join(dwc->irq_thread, NULL);
@@ -92,7 +92,7 @@ static void dwc3_unbind(void* ctx) {
 }
 
 static void dwc3_release(void* ctx) {
-    usb_dwc3_t* dwc = ctx;
+    dwc3_t* dwc = ctx;
     pdev_mmio_buffer_release(&dwc->mmio);
     mx_handle_close(dwc->irq_handle);
     free(dwc);
@@ -106,7 +106,7 @@ static mx_protocol_device_t dwc3_device_proto = {
 static mx_status_t dwc3_bind(void* ctx, mx_device_t* dev, void** cookie) {
     printf("dwc3_bind\n");
 
-    usb_dwc3_t* dwc = calloc(1, sizeof(usb_dwc3_t));
+    dwc3_t* dwc = calloc(1, sizeof(dwc3_t));
     if (!dwc) {
         return MX_ERR_NO_MEMORY;
     }

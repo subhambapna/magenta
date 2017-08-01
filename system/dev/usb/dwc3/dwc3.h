@@ -20,9 +20,9 @@ typedef struct {
     io_buffer_t event_buffer;
     mx_handle_t irq_handle;
     thrd_t irq_thread;
-} usb_dwc3_t;
+} dwc3_t;
 
 void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected);
 
-mx_status_t dwc3_events_init(usb_dwc3_t* dwc);
-void dwc3_events_start(usb_dwc3_t* dwc);
+mx_status_t dwc3_events_init(dwc3_t* dwc);
+void dwc3_events_start(dwc3_t* dwc);
