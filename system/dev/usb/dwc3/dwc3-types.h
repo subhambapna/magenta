@@ -27,17 +27,23 @@ typedef volatile struct {
 #define TRB_TRBSTS_BITS     4
 
 // TRB control fields
-#define TRB_HWO             (1 << 0)   // Hardware Owner of Descriptor
-#define TRB_LST             (1 << 1)   // Last TRB
-#define TRB_CHN             (1 << 2)   // Chain Buffers
-#define TRB_CSP             (1 << 3)   // Continue on Short Packet
-#define TRB_TRBCTL_START    4          // TRB Control
-#define TRB_TRBCTL_BITS     6
-#define TRB_ISP             (1 << 10)  // Interrupt on Short Packet
-#define TRB_IMI             (1 << 10)  // Interrupt on Missed ISOC
-#define TRB_IOC             (1 << 11)  // Interrupt on Complete
-#define TRB_STREAM_ID_START 14          // Stream ID
-#define TRB_STREAM_ID_BITS  16
-#define TRB_SOF_NUM_START   14          // SOF Number
-#define TRB_SOF_NUM_BITS    16
+#define TRB_HWO                 (1 << 0)   // Hardware Owner of Descriptor
+#define TRB_LST                 (1 << 1)   // Last TRB
+#define TRB_CHN                 (1 << 2)   // Chain Buffers
+#define TRB_CSP                 (1 << 3)   // Continue on Short Packet
+#define TRB_TRBCTL_NORMAL       (1 << 4)
+#define TRB_TRBCTL_SETUP        (2 << 4)
+#define TRB_TRBCTL_STATUS_2     (3 << 4)
+#define TRB_TRBCTL_STATUS_3     (4 << 4)
+#define TRB_TRBCTL_DATA         (5 << 4)
+#define TRB_TRBCTL_ISOCH_FIRST  (6 << 4)
+#define TRB_TRBCTL_ISOCH        (7 << 4)
+#define TRB_TRBCTL_LINK         (8 << 4)
+#define TRB_ISP                 (1 << 10)  // Interrupt on Short Packet
+#define TRB_IMI                 (1 << 10)  // Interrupt on Missed ISOC
+#define TRB_IOC                 (1 << 11)  // Interrupt on Complete
+#define TRB_STREAM_ID_START     14          // Stream ID
+#define TRB_STREAM_ID_BITS      16
+#define TRB_SOF_NUM_START       14          // SOF Number
+#define TRB_SOF_NUM_BITS        16
 

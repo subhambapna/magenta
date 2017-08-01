@@ -11,8 +11,9 @@
 
 static int dwc_irq_thread(void* arg) {
     dwc3_t* dwc = arg;
-    volatile void* mmio = dwc->mmio.vaddr;
+    volatile void* mmio = dwc3_mmio(dwc);
 
+printf("dwc_irq_thread start\n");
 /*
     uint32_t* ring_start = io_buffer_virt(&dwc->event_buffer);
     uint32_t* ring_cur = ring_start;
@@ -47,7 +48,7 @@ mx_status_t dwc3_events_init(dwc3_t* dwc) {
         return status;
     }
 
-    volatile void* mmio = dwc->mmio.vaddr;
+    volatile void* mmio = dwc3_mmio(dwc);
 
     // set event buffer pointer and size
     // keep interrupts masked until we are ready
@@ -60,7 +61,7 @@ mx_status_t dwc3_events_init(dwc3_t* dwc) {
 void dwc3_events_start(dwc3_t* dwc) {
 
     // enable events
-    volatile void* mmio = dwc->mmio.vaddr;
+    volatile void* mmio = dwc3_mmio(dwc);
     DWC3_WRITE32(mmio + GEVNTCOUNT(0), 0);
 
     uint32_t event_mask = DEVTEN_ULSTCNGEN | \

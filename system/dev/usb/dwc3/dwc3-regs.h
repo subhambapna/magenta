@@ -187,41 +187,41 @@
 #define GUSB2RHBCTL(n)      (0xc640 + 4 * (n))  // Global USB2 PHY Configuration Register
 
 // Device mode register offsets
-#define DCFG                0xc700              // Device Configuration Register
-#define DCFG_STOP_ON_DISCONNECT (1 << 24)
-#define DCFG_IGN_STRM_PP        (1 << 23)
-#define DCFG_LPMCAP             (1 << 22)
-#define DCFG_NUMP_START         17
-#define DCFG_NUMP_BITS          5
-#define DCFG_INTRNUM_START      12
-#define DCFG_INTRNUM_BITS       5
-#define DCFG_DEVADDR_START      3
-#define DCFG_DEVADDR_BITS       7
-#define DCFG_DEVSPD_START       0
-#define DCFG_DEVSPD_BITS        3
+#define DCFG                            0xc700      // Device Configuration Register
+#define DCFG_STOP_ON_DISCONNECT         (1 << 24)
+#define DCFG_IGN_STRM_PP                (1 << 23)
+#define DCFG_LPMCAP                     (1 << 22)
+#define DCFG_NUMP_START                 17
+#define DCFG_NUMP_BITS                  5
+#define DCFG_INTRNUM_START              12
+#define DCFG_INTRNUM_BITS               5
+#define DCFG_DEVADDR_START              3
+#define DCFG_DEVADDR_BITS               7
+#define DCFG_DEVSPD_START               0
+#define DCFG_DEVSPD_BITS                3
 
-#define DCTL                0xc704              // Device Control Register
-#define DCTL_RUN_STOP               (1 << 31)
-#define DCTL_CSFTRST                (1 << 30)
-#define DCFG_HIRDTHRES_START        24
-#define DCFG_HIRDTHRES_BITS         5
-#define DCFG_LPM_NYET_THRES_START   20
-#define DCFG_LPM_NYET_THRES_BITS    4
-#define DCTL_KEEP_CONNECT           (1 << 19)
-#define DCTL_L1_HIBERNATION_EN      (1 << 18)
-#define DCTL_CRS                    (1 << 17)
-#define DCTL_CSS                    (1 << 16)
-#define DCTL_INITU2ENA              (1 << 12)
-#define DCTL_ACCEPTU2ENA            (1 << 11)
-#define DCTL_INITU1ENA              (1 << 10)
-#define DCTL_ACCEPTU1ENA            (1 << 9)
-#define DCTL_ACCEPTU1ENA            (1 << 9)
-#define DCFG_ULSTCHNGREQ_START      5
-#define DCFG_ULSTCHNGREQ_BITS       4
-#define DCFG_TSTCTL_START           1
-#define DCFG_TSTCTL_BITS            4
+#define DCTL                            0xc704      // Device Control Register
+#define DCTL_RUN_STOP                   (1 << 31)
+#define DCTL_CSFTRST                    (1 << 30)
+#define DCFG_HIRDTHRES_START            24
+#define DCFG_HIRDTHRES_BITS             5
+#define DCFG_LPM_NYET_THRES_START       20
+#define DCFG_LPM_NYET_THRES_BITS        4
+#define DCTL_KEEP_CONNECT               (1 << 19)
+#define DCTL_L1_HIBERNATION_EN          (1 << 18)
+#define DCTL_CRS                        (1 << 17)
+#define DCTL_CSS                        (1 << 16)
+#define DCTL_INITU2ENA                  (1 << 12)
+#define DCTL_ACCEPTU2ENA                (1 << 11)
+#define DCTL_INITU1ENA                  (1 << 10)
+#define DCTL_ACCEPTU1ENA                (1 << 9)
+#define DCTL_ACCEPTU1ENA                (1 << 9)
+#define DCFG_ULSTCHNGREQ_START          5
+#define DCFG_ULSTCHNGREQ_BITS           4
+#define DCFG_TSTCTL_START               1
+#define DCFG_TSTCTL_BITS                4
 
-#define DEVTEN              0xc708              // Device Event Enable Register
+#define DEVTEN                          0xc708      // Device Event Enable Register
 #define DEVTEN_LDMEVTEN                 (1 << 15)
 #define DEVTEN_L1WKUPEVTEN              (1 << 14)
 #define DEVTEN_STOP_ON_DISCONNECT_EN    (1 << 13)
@@ -237,8 +237,7 @@
 #define DEVTEN_USBRSTEVTEN              (1 << 1)
 #define DEVTEN_DISSCONNEVTEN            (1 << 0)
 
-#define DSTS                0xc70c              // Device Status Register
-
+#define DSTS                            0xc70c      // Device Status Register
 #define DSTS_DCNRD                      (1 << 29)
 #define DSTS_SRE                        (1 << 28)
 #define DSTS_RSS                        (1 << 25)
@@ -253,8 +252,9 @@
 #define DCFG_CONNECTSPD_START           0
 #define DCFG_CONNECTSPD_BITS            3
 
-#define DGCMDPAR            0xc710              // Device Generic Command Parameter Register
-#define DGCMD               0xc714              // Device Generic Command Register
+#define DGCMDPAR                        0xc710      // Device Generic Command Parameter Register
+
+#define DGCMD                           0xc714      // Device Generic Command Register
 #define DGCMD_CMDSTATUS_START           12
 #define DGCMD_CMDSTATUS_BITS            4
 #define DGCMD_CMDACT                    (1 << 10)
@@ -262,8 +262,8 @@
 #define DGCMD_CMDTYP_START              0
 #define DGCMD_CMDTYP_BITS               8
 
-#define DALEPENA            0xc720              // Device Active USB Endpoint Enable Register
-#define DLDMENA             0xc724              // Device LDM Request Control Register
+#define DALEPENA            0xc720                  // Device Active USB Endpoint Enable Register
+#define DLDMENA             0xc724                  // Device LDM Request Control Register
 
 #define DEPCMDPAR2(n)       (0xc800 + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 2 Register
 #define DEPCMDPAR1(n)       (0xc804 + 0x10 * (n))   // Device Physical Endpoint-n Command Parameter 1 Register
@@ -277,21 +277,48 @@
 #define DEPCMD_HIPRI_FORCERM            (1 << 11)   // HighPriority/ForceRM
 #define DEPCMD_CMDACT                   (1 << 10)   // Command Active
 #define DEPCMD_CMDIOC                   (1 << 8)    // Command Interrupt on Complete
-#define DEPCMD_CMDTYP_START             0           // Command Type
-#define DEPCMD_CMDTYP_BITS              4
+#define DEPCMD_CMDTYP(n)                (((n) & 0xf) >> 0)
 
 // Command Types for DEPCMD
-#define DEPCMD_SET_EP_CONFIG            1           // Set Endpoint Configuration
-#define DEPCMD_SET_EP_TXFR_RSRC_CONFIG  2           // Set Endpoint Transfer Resource Configuration
-#define DEPCMD_GET_EP_STATE             3           // Get EndpointState 
-#define DEPCMD_SET_STALL                4           // Set Stall
-#define DEPCMD_CLEAR_STALL              5           // Clear Stall
-#define DEPCMD_START_TXFR               6           // Start Transfer
-#define DEPCMD_UPDATE_TXFR              7           // Update Transfer
-#define DEPCMD_END_TXFR                 8           // End Transfer
-#define DEPCMD_START_NEW_CONFIG         9           // Start New Configuration
+#define DEPCFG                          1       // Set Endpoint Configuration
+#define DEPXFERCFG                      2       // Set Endpoint Transfer Resource Configuration
+#define DEPGETSTATE                     3       // Get EndpointState 
+#define DEPSSTALL                       4       // Set Stall
+#define DEPCSTALL                       5       // Clear Stall
+#define DEPSTRTXFER                     6       // Start Transfer
+#define DEPUPDXFER                      7       // Update Transfer
+#define DEPENDXFER                      8       // End Transfer
+#define DEPSTARTCFG                     9       // Start New Configuration
 
-#define DEV_IMOD(n)         (0xca00 + 4 * (n))      // Device Interrupt Moderation Register
+#define DEPCMD_RESOURCE_INDEX(n)        (((n) & 0x7f) << 16)
+
+// DEPCFG Params 0
+#define DEPCFG_ACTION_INITIALIZE        (0 << 30)
+#define DEPCFG_ACTION_RESTORE           (1 << 30)
+#define DEPCFG_ACTION_MODIFY            (2 << 30)
+#define DEPCFG_BURST_SIZE(n)            ((((n) - 1) & 0xf) << 22)
+#define DEPCFG_FIFO_NUM(n)              (((n) & 0x1f) << 17)
+#define DEPCFG_INTERNAL_RETRY           (1 << 15)
+#define DEPCFG_MAX_PACKET_SIZE(n)       (((n) & 0x7ff) << 3)
+#define DEPCFG_EP_TYPE(n)               (((n) & 0x3) << 0)
+
+// DEPCFG Params 1
+#define DEPCFG_FIFO_BASED               (1 << 31)
+#define DEPCFG_EP_NUMBER(n)             (((n) & 0x1f) << 25)
+#define DEPCFG_STREAM_CAPABLE           (1 << 24)
+#define DEPCFG_INTERVAL(n)              (((n) & 0xff) << 16)
+#define DEPCFG_EBC                      (1 << 15)   // External Buffer Control
+#define DEPCFG_EBC_NO_WRITE_BACK        (1 << 14)   // Don't write back HWO bit to the TRB descriptor
+#define DEPCFG_STREAM_EVT_EN            (1 << 13)
+#define DEPCFG_XFER_NOT_READY_EN        (1 << 10)
+#define DEPCFG_XFER_PROGRESS_EN         (1 << 9)
+#define DEPCFG_XFER_COMPLETE_EN         (1 << 8)
+#define DEPCFG_INTR_NUM(n)              (((n) & 0x1f) << 0)
+
+// DEPXFERCFG Params 0
+#define DEPXFERCFG_NUM_XFER_RES(n)      (((n) & 0xff) << 0)
+
+#define DEV_IMOD(n)                     (0xca00 + 4 * (n))  // Device Interrupt Moderation Register
 
 // BC register offsets
 #define BCFG                0xcc30              // BC Configuration Register

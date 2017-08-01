@@ -36,8 +36,9 @@ void dwc3_wait_bits(volatile uint32_t* ptr, uint32_t bits, uint32_t expected) {
 
 static mx_status_t dwc3_start(dwc3_t* dwc) {
 printf("dwc3_start\n");
+    volatile void* mmio = dwc3_mmio(dwc);
+
     // set device mode
-    volatile void* mmio = dwc->mmio.vaddr;
     uint32_t temp = readl(mmio + GCTL);
     temp &= ~GCTL_PRTCAPDIR_MASK;
     temp |= GCTL_PRTCAPDIR_HOST;
@@ -48,10 +49,15 @@ printf("dwc3_start\n");
     writel(temp, mmio + DCTL);
     dwc3_wait_bits(mmio + DCTL, DCTL_CSFTRST, 0);
 
+    dwc3_events_start(dwc);
+
+    // start the controller
+    DWC3_WRITE32(mmio + DCTL, DCTL_RUN_STOP);
+
     printf("global registers:\n");
-    hexdump(dwc->mmio.vaddr + GSBUSCFG0, 256);
+    hexdump((void *)mmio + GSBUSCFG0, 256);
     printf("device registers:\n");
-    hexdump(dwc->mmio.vaddr + DCFG, 256);
+    hexdump((void *)mmio + DCFG, 256);
 
     return MX_OK;
 }
@@ -93,6 +99,10 @@ static void dwc3_unbind(void* ctx) {
 
 static void dwc3_release(void* ctx) {
     dwc3_t* dwc = ctx;
+
+    for (unsigned i = 0; i < countof(dwc->eps); i++) {
+        dwc3_ep_release(dwc, i);
+    }
     pdev_mmio_buffer_release(&dwc->mmio);
     mx_handle_close(dwc->irq_handle);
     free(dwc);
@@ -120,16 +130,25 @@ static mx_status_t dwc3_bind(void* ctx, mx_device_t* dev, void** cookie) {
     status = pdev_map_mmio_buffer(&pdev, MMIO_USB3OTG, MX_CACHE_POLICY_UNCACHED_DEVICE,
                                   &dwc->mmio);
     if (status != MX_OK) {
+        printf("dwc3_bind: pdev_map_mmio_buffer failed\n");
+        goto fail;
+    }
+
+    status = dwc3_ep0_enable(dwc);
+    if (status != MX_OK) {
+        printf("dwc3_bind: dwc3_ep0_enable failed\n");
         goto fail;
     }
 
     status = pdev_map_interrupt(&pdev, IRQ_USB3, &dwc->irq_handle);
     if (status != MX_OK) {
+        printf("dwc3_bind: pdev_map_interrupt failed\n");
         goto fail;
     }
 
     status = dwc3_events_init(dwc);
     if (status != MX_OK) {
+        printf("dwc3_bind: dwc3_events_init failed\n");
         goto fail;
     }
 
@@ -146,12 +165,6 @@ static mx_status_t dwc3_bind(void* ctx, mx_device_t* dev, void** cookie) {
     if (status != MX_OK) {
         goto fail;
     }
-
-    dwc3_events_start(dwc);
-
-    // start the controller
-    volatile void* mmio = dwc->mmio.vaddr;
-    DWC3_WRITE32(mmio + DCTL, DCTL_RUN_STOP);
 
     return MX_OK;
 
